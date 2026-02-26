@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Logs | UserSphere</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       #080c14;
+      --surface:  #0e1520;
+      --surface2: #131c2e;
+      --border:   rgba(255,255,255,0.07);
+      --border2:  rgba(255,255,255,0.12);
+      --text:     #e2e8f0;
+      --muted:    #64748b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 40px 20px;
+      background-image:
+        radial-gradient(ellipse at 20% 0%, rgba(59,130,246,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 0%, rgba(99,102,241,0.06) 0%, transparent 50%);
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    /* HEADER */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .header-left h1 {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+    }
+
+    .breadcrumb {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .back-btn {
+      padding: 7px 16px;
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+    }
+
+    /* FILTERS SECTION */
+    .filters-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+
+    .filters-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .filter-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    select, input[type="date"], input[type="text"] {
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      padding: 7px 12px;
+      outline: none;
+      transition: border-color 0.2s ease;
+      min-width: 130px;
+    }
+
+    select:focus, input:focus {
+      border-color: rgba(99,102,241,0.5);
+    }
+
+    input[type="text"]::placeholder {
+      color: var(--muted);
+    }
+
+    .filter-actions {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+      margin-left: auto;
+    }
+
+    .btn-clear {
+      padding: 7px 14px;
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-clear:hover {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+    }
+
+    .btn-export {
+      padding: 7px 16px;
+      border: 1px solid rgba(59,130,246,0.3);
+      border-radius: 8px;
+      background: rgba(59,130,246,0.1);
+      color: #60a5fa;
+      font-size: 13px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-export:hover {
+      background: rgba(59,130,246,0.2);
+      border-color: rgba(59,130,246,0.5);
+    }
+
+    /* TABLE SECTION */
+    .table-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .table-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .table-header h2 {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .table-header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logs-count {
+      font-size: 12px;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      background: var(--surface2);
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+    }
+
+    /* pagination inline */
+    .pagination-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pagination-controls select {
+      min-width: auto;
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+
+    .pagination-controls span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    #loadMoreBtn {
+      padding: 5px 12px;
+      border: 1px solid var(--border2);
+      border-radius: 7px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    #loadMoreBtn:hover:not(:disabled) {
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+    }
+
+    #loadMoreBtn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      padding: 12px 24px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-family: 'DM Mono', monospace;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s ease;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+
+    td {
+      padding: 13px 24px;
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    .td-num {
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      width: 36px;
+      text-align: center;
+    }
+
+    .td-admin { font-weight: 500; }
+
+    .td-action {
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: #93c5fd;
+    }
+
+    .td-target {
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+    }
+
+    .td-time {
+      color: var(--muted);
+      font-size: 12px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .empty-row td {
+      text-align: center;
+      color: var(--muted);
+      padding: 40px;
+      font-style: italic;
+    }
+
+    /* ===== LIMIT TOGGLE ===== */
+    .limit-toggle {
+      display: inline-flex;
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .limit-btn {
+      padding: 4px 14px;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 12px;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .limit-btn.active {
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+    }
+
+    .limit-btn:hover:not(.active) {
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+    }
+
+    /* Time format */
+    .time-short { display: none; }
+    .time-full  { display: inline; }
+
+    /* ===== RESPONSIVE — MOBILE ONLY ===== */
+    @media (max-width: 768px) {
+      body { padding: 20px 14px; }
+
+      /* HEADER */
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .header-left h1 { font-size: 18px; }
+      .back-btn { width: 100%; text-align: center; }
+
+      /* FILTERS — 2 column compact grid */
+      .filters-section { padding: 14px; }
+
+      .filters-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        align-items: end;
+      }
+
+      .filter-group { width: 100%; }
+
+      select, input[type="date"], input[type="text"] {
+        width: 100%;
+        min-width: unset;
+      }
+
+      /* Search user full width */
+      .filter-group:nth-child(6) { grid-column: span 2; }
+
+      /* Buttons full width */
+      .filter-actions {
+        grid-column: span 2;
+        margin-left: 0;
+        width: 100%;
+        justify-content: stretch;
+      }
+
+      .btn-clear, .btn-export {
+        flex: 1;
+        text-align: center;
+      }
+
+      /* TABLE HEADER */
+      .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 14px 16px;
+      }
+
+      /* TABLE — hide target user, nowrap text */
+      .table-section { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+      table { width: 100%; }
+      td, thead th { padding: 10px 10px; }
+
+      thead th:nth-child(4),
+      tbody td:nth-child(4) { display: none; }
+
+      /* Swap select for toggle on mobile */
+      #limitSelect { display: none; }
+      .limit-toggle { display: inline-flex !important; }
+
+      .td-num { padding: 10px 4px 10px 8px; width: 24px; }
+      .td-admin { white-space: nowrap; font-size: 12px; }
+      .td-action { white-space: nowrap; font-size: 11px; }
+      .td-time { white-space: nowrap; font-size: 11px; }
+      .time-full  { display: none; }
+      .time-short { display: inline; }
+      #loadMoreBtn { white-space: nowrap; font-size: 11px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-left">
+        <h1 id="logsTitle">Admin Activity Logs</h1>
+        <div class="breadcrumb">UserSphere / admin / logs</div>
+      </div>
+      <a href="admin.html" class="back-btn">← Back to Dashboard</a>
+    </div>
+
+    <!-- FILTERS -->
+    <div class="filters-section">
+      <div class="filters-grid">
+
+        <div class="filter-group">
+          <div class="filter-label">Filter by Action</div>
+          <select id="actionFilter">
+            <option value="all">All</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-label">Filter by Admin</div>
+          <select id="adminFilter">
+            <option value="all">All</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-label">Filter by Date</div>
+          <select id="datePreset">
+            <option value="all">All time</option>
+            <option value="today">Today</option>
+            <option value="7">Last 7 days</option>
+            <option value="30">Last 30 days</option>
+            <option value="custom">Custom</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-label">From</div>
+          <input type="date" id="fromDate">
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-label">To</div>
+          <input type="date" id="toDate">
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-label">Search User</div>
+          <input type="text" id="userSearch" placeholder="email or name">
+        </div>
+
+        <div class="filter-actions">
+          <button class="btn-clear" id="clearFiltersBtn">Clear filters</button>
+          <button class="btn-export" id="exportLogsBtn">Export CSV</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-section">
+      <div class="table-header">
+        <h2>Activity Logs</h2>
+        <div class="table-header-right">
+          <div class="pagination-controls">
+            <select id="limitSelect">
+              <option value="10" selected>10</option>
+              <option value="20">20</option>
+            </select>
+            <div class="limit-toggle" style="display:none;">
+              <button class="limit-btn active" onclick="setLimit(10)">10</button>
+              <button class="limit-btn" onclick="setLimit(20)">20</button>
+            </div>
+            <span>logs</span>
+            <button id="loadMoreBtn" disabled>Load older logs</button>
+          </div>
+        </div>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Admin</th>
+            <th>Action</th>
+            <th>Target User</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody id="logsTable">
+          <tr class="empty-row"><td colspan="5">Loading logs...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <script>
+    function setLimit(val) {
+      document.getElementById('limitSelect').value = val;
+      document.querySelectorAll('.limit-btn').forEach(btn => {
+        btn.classList.toggle('active', parseInt(btn.textContent) === val);
+      });
+      // Trigger change event so admin-logs.js picks it up
+      document.getElementById('limitSelect').dispatchEvent(new Event('change'));
+    }
+  </script>
+  <script src="js/admin-logs.js"></script>
+</body>
+</html>

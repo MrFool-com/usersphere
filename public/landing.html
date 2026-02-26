@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UserSphere</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ===== RESET LANDING BODY ===== */
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #fff;
+      color: #1a1a1a;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ===== NAVBAR ===== */
+    .landing-navbar {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      z-index: 999;
+    }
+
+    .nav-container {
+      width: 90%;
+      max-width: 1100px;
+      margin: auto;
+      padding: 16px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 1.4em;
+      color: #8f2c24;
+      letter-spacing: -0.3px;
+    }
+
+    .nav-actions { display: flex; align-items: center; gap: 8px; }
+
+    .nav-login {
+      color: #555;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: color 0.2s ease;
+    }
+
+    .nav-login:hover { color: #8f2c24; }
+
+    .nav-signup {
+      padding: 8px 20px;
+      background: #8f2c24;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .nav-signup:hover {
+      background: #a7392f;
+      transform: translateY(-1px);
+    }
+
+    /* ===== HERO ===== */
+    .landing-hero {
+      padding: 100px 0 80px;
+      background: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .landing-hero::before {
+      content: "";
+      position: absolute;
+      top: -100px;
+      right: -100px;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(143,44,36,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .landing-container {
+      width: 90%;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .hero-flex {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 60px;
+    }
+
+    .hero-text { flex: 1.1; }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #8f2c24;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      font-family: 'DM Mono', monospace;
+      background: rgba(143,44,36,0.07);
+      padding: 5px 12px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+
+    .hero-text h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3.6em;
+      font-weight: 800;
+      color: #111;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      margin-bottom: 20px;
+    }
+
+    .hero-text h1 span { color: #8f2c24; }
+
+    .hero-text p {
+      font-size: 1.1em;
+      color: #666;
+      line-height: 1.7;
+      max-width: 480px;
+      margin-bottom: 36px;
+    }
+
+    .landing-actions { display: flex; gap: 12px; }
+
+    .btn-primary {
+      padding: 13px 28px;
+      background: #8f2c24;
+      color: #fff;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 14px rgba(143,44,36,0.25);
+    }
+
+    .btn-primary:hover {
+      background: #a7392f;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(143,44,36,0.3);
+    }
+
+    .btn-secondary {
+      padding: 13px 28px;
+      border: 1.5px solid rgba(0,0,0,0.15);
+      color: #333;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: all 0.25s ease;
+    }
+
+    .btn-secondary:hover {
+      border-color: #8f2c24;
+      color: #8f2c24;
+      transform: translateY(-2px);
+    }
+
+    /* HERO VISUAL */
+    .hero-visual {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .visual-card {
+      background: #fafafa;
+      border: 1px solid rgba(0,0,0,0.07);
+      border-radius: 14px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+
+    .visual-card:hover {
+      transform: translateX(6px);
+      border-color: rgba(143,44,36,0.2);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    }
+
+    .visual-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(143,44,36,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .visual-card-text { font-weight: 500; font-size: 15px; color: #222; }
+    .visual-card-sub { font-size: 12px; color: #999; margin-top: 2px; }
+
+    /* ===== FEATURES ===== */
+    .landing-features {
+      padding: 100px 0;
+      background: #fafaf9;
+      border-top: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #8f2c24;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-family: 'DM Mono', monospace;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2em;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 50px;
+      letter-spacing: -0.5px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: #fff;
+      border: 1px solid rgba(0,0,0,0.07);
+      border-radius: 16px;
+      padding: 28px 24px;
+      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+      border-color: rgba(143,44,36,0.15);
+    }
+
+    .feature-icon {
+      font-size: 24px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .feature-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      font-size: 14px;
+      color: #777;
+      line-height: 1.6;
+    }
+
+    /* ===== WHY ===== */
+    .landing-why {
+      padding: 100px 0;
+      background: #fff;
+    }
+
+    .why-grid {
+      margin-top: 50px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+
+    .why-item {
+      padding: 32px 28px;
+      border-radius: 16px;
+      border: 1px solid rgba(0,0,0,0.07);
+      background: #fafaf9;
+      transition: all 0.3s ease;
+    }
+
+    .why-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 32px rgba(0,0,0,0.07);
+      border-color: rgba(143,44,36,0.15);
+    }
+
+    .why-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5em;
+      font-weight: 800;
+      color: rgba(143,44,36,0.15);
+      line-height: 1;
+      margin-bottom: 16px;
+    }
+
+    .why-item h3 {
+      font-size: 17px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 10px;
+    }
+
+    .why-item p {
+      font-size: 14px;
+      color: #777;
+      line-height: 1.6;
+    }
+
+    /* ===== PREVIEW ===== */
+    .landing-preview {
+      padding: 100px 0 120px;
+      background: #fafaf9;
+      border-top: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .landing-preview .section-title { margin-bottom: 14px; }
+
+    .preview-subtitle {
+      font-size: 15px;
+      color: #888;
+      margin-bottom: 48px;
+    }
+
+    .dashboard-mock {
+      margin-top: 0;
+      height: 340px;
+      border-radius: 16px;
+      background: #ffffff;
+      display: flex;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.1);
+      border: 1px solid rgba(0,0,0,0.08);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      position: relative;
+    }
+
+    .dashboard-mock:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 40px 80px rgba(0,0,0,0.14);
+    }
+
+    .preview-label {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: #8f2c24;
+      color: #fff;
+      font-size: 10px;
+      font-family: 'DM Mono', monospace;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.8px;
+      z-index: 10;
+    }
+
+    .mock-sidebar {
+      width: 180px;
+      background: #8f2c24;
+      color: #fff;
+      padding: 24px 20px;
+      flex-shrink: 0;
+    }
+
+    .mock-sidebar h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      margin-bottom: 24px;
+      opacity: 0.95;
+    }
+
+    .mock-sidebar ul { list-style: none; }
+
+    .mock-sidebar li {
+      margin-bottom: 14px;
+      opacity: 0.75;
+      font-size: 13px;
+      transition: opacity 0.2s;
+      cursor: default;
+    }
+
+    .mock-sidebar li:hover { opacity: 1; }
+
+    .mock-content { flex: 1; padding: 24px 20px; }
+
+    .mock-cards {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .mock-card {
+      flex: 1;
+      background: #f5f5f5;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #444;
+    }
+
+    .mock-table {
+      overflow: hidden;
+      height: 200px;
+      padding: 16px;
+      position: relative;
+      background: #fafafa;
+      border-radius: 10px;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .mock-table::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 50px;
+      background: linear-gradient(to top, #fafafa, transparent);
+      z-index: 2;
+    }
+
+    .mock-logs {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+      animation: scrollLogs 8s linear infinite;
+    }
+
+    @keyframes scrollLogs {
+      0%   { transform: translateY(0); }
+      100% { transform: translateY(-50%); }
+    }
+
+    .log-row {
+      background: #fff;
+      color: #555;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 12px;
+      border: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+
+    /* ===== FOOTER ===== */
+    .landing-footer {
+      background: #111;
+      color: #ccc;
+      padding: 60px 0 0;
+      position: relative;
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .footer-left h3 {
+      font-family: 'Playfair Display', serif;
+      color: #fff;
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .footer-left p {
+      max-width: 320px;
+      color: #777;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .footer-links { text-align: right; }
+
+    .footer-links a {
+      display: block;
+      margin-bottom: 12px;
+      color: #777;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+
+    .footer-links a:hover {
+      color: #fff;
+      transform: translateX(-3px);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding: 20px 0;
+      margin-top: 48px;
+      border-top: 1px solid #222;
+      font-size: 13px;
+      color: #555;
+      font-family: 'DM Mono', monospace;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    .hero-text,
+    .hero-visual {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .hero-visual { animation-delay: 0.15s; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+
+      .nav-login { display: none; }
+
+      .landing-hero { padding: 60px 0 50px; }
+
+      .hero-flex {
+        flex-direction: column;
+        gap: 40px;
+        text-align: center;
+      }
+
+      .hero-text h1 { font-size: 2.4em; }
+      .hero-text p { font-size: 1em; max-width: 100%; }
+      .hero-eyebrow { margin: 0 auto 20px; }
+
+      .landing-actions {
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .hero-visual { width: 100%; }
+
+      .landing-features,
+      .landing-why,
+      .landing-preview { padding: 60px 0; }
+
+      .section-title { font-size: 1.8em; margin-bottom: 30px; }
+
+      .feature-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .why-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin-top: 30px;
+      }
+
+      .dashboard-mock {
+        flex-direction: column;
+        height: auto;
+      }
+
+      .mock-sidebar {
+        width: 100%;
+        padding: 16px 20px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .mock-sidebar h4 { margin-bottom: 0; }
+
+      .mock-sidebar ul {
+        display: flex;
+        gap: 14px;
+      }
+
+      .mock-sidebar li { margin-bottom: 0; }
+
+      .preview-label {
+        top: auto;
+        bottom: 14px;
+        right: 14px;
+      }
+
+      .mock-cards {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .mock-table { height: 150px; }
+
+      .footer-content {
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .footer-links { text-align: left; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-text h1 { font-size: 2em; }
+
+      .feature-grid { grid-template-columns: 1fr; }
+
+      .btn-primary, .btn-secondary {
+        width: 100%;
+        text-align: center;
+        display: block;
+      }
+
+      .landing-actions { flex-direction: column; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <div class="landing-navbar">
+    <div class="nav-container">
+      <div class="nav-logo">UserSphere</div>
+      <div class="nav-actions">
+        <a href="index.html" class="nav-login">Login</a>
+        <a href="signup.html" class="nav-signup">Sign Up</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="landing-hero">
+    <div class="landing-container hero-flex">
+
+      <div class="hero-text">
+        <div class="hero-eyebrow">🔐 Role-Based Platform</div>
+        <h1>Manage Users.<br><span>Stay Secure.</span></h1>
+        <p>Secure role-based user management with activity tracking, admin controls, and powerful monitoring tools — all in one place.</p>
+        <div class="landing-actions">
+          <a href="index.html" class="btn-primary">Get Started</a>
+          <a href="signup.html" class="btn-secondary">Create Account</a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="visual-card">
+          <div class="visual-icon">👥</div>
+          <div>
+            <div class="visual-card-text">User Roles</div>
+            <div class="visual-card-sub">Admin, SuperAdmin, User</div>
+          </div>
+        </div>
+        <div class="visual-card">
+          <div class="visual-icon">🔒</div>
+          <div>
+            <div class="visual-card-text">Secure Access</div>
+            <div class="visual-card-sub">JWT protected routes</div>
+          </div>
+        </div>
+        <div class="visual-card">
+          <div class="visual-icon">📋</div>
+          <div>
+            <div class="visual-card-text">Activity Logs</div>
+            <div class="visual-card-sub">Track every action</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="landing-features">
+    <div class="landing-container">
+      <div class="section-label">Features</div>
+      <div class="section-title">Everything you need</div>
+
+      <div class="feature-grid">
+        <div class="feature-card">
+          <span class="feature-icon">🛡️</span>
+          <h3>Role-Based Access</h3>
+          <p>Admin, Super Admin and User permissions with fully protected routes.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">📊</span>
+          <h3>Activity Logs</h3>
+          <p>Track user actions and admin operations securely in real time.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🔐</span>
+          <h3>Security First</h3>
+          <p>Authentication middleware and protected backend APIs at every layer.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">📤</span>
+          <h3>Data Export</h3>
+          <p>Export logs and records as CSV for reporting and audits instantly.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHY USERSPHERE -->
+  <div class="landing-why">
+    <div class="landing-container">
+      <div class="section-label">Why UserSphere</div>
+      <div class="section-title">Built different</div>
+
+      <div class="why-grid">
+        <div class="why-item">
+          <div class="why-number">01</div>
+          <h3>Centralized Control</h3>
+          <p>Manage users, permissions, and activity from one secure dashboard.</p>
+        </div>
+        <div class="why-item">
+          <div class="why-number">02</div>
+          <h3>Built for Security</h3>
+          <p>Role-based protection ensures only authorized access to sensitive areas.</p>
+        </div>
+        <div class="why-item">
+          <div class="why-number">03</div>
+          <h3>Audit Ready</h3>
+          <p>Track actions and export logs for monitoring and compliance needs.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD PREVIEW -->
+  <div class="landing-preview">
+    <div class="landing-container">
+      <div class="section-label">Preview</div>
+      <div class="section-title">Dashboard Overview</div>
+      <p class="preview-subtitle">Centralized control panel to manage users and monitor activity.</p>
+
+      <div class="dashboard-mock">
+        <div class="preview-label">LIVE PREVIEW</div>
+
+        <div class="mock-sidebar">
+          <h4>UserSphere</h4>
+          <ul>
+            <li>Dashboard</li>
+            <li>Users</li>
+            <li>Logs</li>
+            <li>Settings</li>
+          </ul>
+        </div>
+
+        <div class="mock-content">
+          <div class="mock-cards">
+            <div class="mock-card">User Management</div>
+            <div class="mock-card">Role Permissions</div>
+            <div class="mock-card">Activity Monitoring</div>
+          </div>
+
+          <div class="mock-table">
+            <div class="mock-logs">
+              <div class="log-row">User login successful</div>
+              <div class="log-row">Role updated: Admin → User</div>
+              <div class="log-row">Export file generated</div>
+              <div class="log-row">Permission access granted</div>
+              <div class="log-row">User login successful</div>
+              <div class="log-row">Role updated: Admin → User</div>
+              <div class="log-row">Export file generated</div>
+              <div class="log-row">Permission access granted</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="landing-footer">
+    <div class="landing-container footer-content">
+      <div class="footer-left">
+        <h3>UserSphere</h3>
+        <p>Role-based user management and activity monitoring platform.</p>
+      </div>
+      <div class="footer-links">
+        <a href="index.html">Login</a>
+        <a href="signup.html">Sign Up</a>
+        <a href="#" onclick="return false;">Documentation</a>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2026 UserSphere. All rights reserved.</div>
+  </footer>
+
+</body>
+</html>

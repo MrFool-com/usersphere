@@ -1,0 +1,17 @@
+{
+  "name": "usersphere-backend",
+  "version": "1.0.0",
+  "description": "UserSphere backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "json2csv": "^6.0.0-alpha.2",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^8.5.2"
+  }
+}
