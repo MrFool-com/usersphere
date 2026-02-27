@@ -9,6 +9,11 @@ connectDB();
 const app = express();
 app.use(express.json());
 
+// ✅ health check route (For Uptimerobot)
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
 //  THIS LINE WAS MISSING
 app.use(express.static(path.join(__dirname, "../public"), {
   index: false
