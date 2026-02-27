@@ -171,3 +171,21 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
   localStorage.removeItem("token");
   window.location.href = "/index.html";
 });
+
+// ===============================
+// 🟢 SYSTEM STATUS CHECK
+// ===============================
+async function checkSystemStatus() {
+  try {
+    const res = await fetch("/status");
+    const data = await res.json();
+
+    document.getElementById("systemStatus").innerHTML =
+      "🟢 System Online";
+  } catch {
+    document.getElementById("systemStatus").innerHTML =
+      "🔴 System Offline";
+  }
+}
+
+checkSystemStatus();

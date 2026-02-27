@@ -14,6 +14,14 @@ app.get("/health", (req, res) => {
   res.status(200).send("OK");
 });
 
+app.get("/status", (req, res) => {
+  res.json({
+    status: "online",
+    time: new Date(),
+    uptime: process.uptime()
+  });
+});
+
 //  THIS LINE WAS MISSING
 app.use(express.static(path.join(__dirname, "../public"), {
   index: false
