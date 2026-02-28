@@ -136,12 +136,14 @@ exports.forgotPassword = async (req, res) => {
     // Reset link with RAW token (user ke email mein)
     const resetUrl = `${process.env.CLIENT_URL}/reset-password.html?token=${rawToken}`;
 
-    // Nodemailer transporter (Gmail)
+    // Nodemailer transporter (Gmail - explicit SMTP for Render)
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS  // Gmail App Password (not your Gmail password)
+        pass: process.env.EMAIL_PASS
       }
     });
 
