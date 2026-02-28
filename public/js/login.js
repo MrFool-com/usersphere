@@ -1,41 +1,54 @@
-const loginForm = document.getElementById("loginForm");
-const errorBox = document.getElementById("error");
+// login.js — compatible with new index.html design
 
-loginForm.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  errorBox.style.display = "none";
+const loginBtn      = document.getElementById("btn");
+const errorEl       = document.getElementById("error");
+const errorTxt      = document.getElementById("error-text");
 
-  const email = document.getElementById("email").value.trim();
+// Show / hide error helpers
+function showError(msg) {
+  errorTxt.textContent = msg;
+  errorEl.classList.add("show");
+}
+
+function hideError() {
+  errorEl.classList.remove("show");
+}
+
+// Main login handler
+async function handleLogin() {
+  hideError();
+
+  const email    = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
 
   if (!email || !password) {
-    errorBox.textContent = "Please fill all fields";
-    errorBox.style.display = "block";
+    showError("Please fill all fields.");
     return;
   }
+
+  // Loading state on
+  loginBtn.classList.add("loading");
+  loginBtn.disabled = true;
 
   try {
     const res = await fetch("/api/auth/login", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
     });
 
     const data = await res.json();
 
     if (!res.ok) {
-      errorBox.textContent = data.message || "Login failed";
-      errorBox.style.display = "block";
+      showError(data.message || "Login failed. Please try again.");
       return;
     }
 
-    // ✅ SAVE AUTH DATA
+    // Save auth data
     localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user));
 
-    // ✅ ROLE BASED REDIRECT
+    // Role based redirect
     if (["admin", "superadmin"].includes(data.user.role)) {
       window.location.href = "admin.html";
     } else {
@@ -43,7 +56,21 @@ loginForm.addEventListener("submit", async (e) => {
     }
 
   } catch (err) {
-    errorBox.textContent = "Server error. Try again.";
-    errorBox.style.display = "block";
+    showError("Server error. Please try again.");
+  } finally {
+    loginBtn.classList.remove("loading");
+    loginBtn.disabled = false;
   }
+}
+
+// Button click
+loginBtn.addEventListener("click", handleLogin);
+
+// Enter key support
+document.getElementById("password").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") handleLogin();
+});
+
+document.getElementById("email").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") handleLogin();
 });
