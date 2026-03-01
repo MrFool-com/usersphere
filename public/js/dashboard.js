@@ -181,10 +181,20 @@ async function checkSystemStatus() {
     const data = await res.json();
 
     document.getElementById("systemStatus").innerHTML =
-      "🟢 System Online";
+      `<span style="
+        width:7px; height:7px; border-radius:50%;
+        background:#22c55e; display:inline-block;
+        animation: pulse-dot 1.8s ease-in-out infinite;
+        box-shadow: 0 0 0 3px rgba(34,197,94,0.2);
+      "></span> System Online`;
   } catch {
     document.getElementById("systemStatus").innerHTML =
-      "🔴 System Offline";
+      `<span style="
+        width:7px; height:7px; border-radius:50%;
+        background:#ef4444; display:inline-block;
+        animation: pulse-dot 1.8s ease-in-out infinite;
+        box-shadow: 0 0 0 3px rgba(239,68,68,0.2);
+      "></span> System Offline`;
   }
 }
 
