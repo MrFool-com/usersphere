@@ -8,6 +8,9 @@
   <link rel="stylesheet" href="css/style.css">
   <style>
     /* ===== RESET LANDING BODY ===== */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { overflow-x: hidden; max-width: 100%; }
+
     body {
       font-family: 'DM Sans', sans-serif;
       background: #fff;
@@ -637,13 +640,17 @@
 
       .feature-grid { grid-template-columns: 1fr; }
 
+      .landing-actions {
+        flex-direction: column;
+        width: 100%;
+      }
+
       .btn-primary, .btn-secondary {
         width: 100%;
         text-align: center;
         display: block;
+        padding: 14px 20px;
       }
-
-      .landing-actions { flex-direction: column; }
     }
   </style>
 </head>
@@ -821,8 +828,7 @@
 
   <script>
   window.addEventListener("load", () => {
-    fetch("https://usersphere-8d3z.onrender.com/health")
-      .catch(() => {});
+    fetch("/health").catch(() => {});
   });
 </script>
 
