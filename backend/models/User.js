@@ -31,6 +31,23 @@ const userSchema = new mongoose.Schema(
       default: null
     },
 
+    // ===== EMAIL VERIFICATION FIELDS =====
+    isVerified: {
+      type: Boolean,
+      default: false
+    },
+
+    emailOtp: {
+      type: String,
+      default: null
+    },
+
+    emailOtpExpire: {
+      type: Date,
+      default: null
+    },
+    // ======================================
+
     // ===== PASSWORD RESET FIELDS =====
     resetPasswordToken: {
       type: String,

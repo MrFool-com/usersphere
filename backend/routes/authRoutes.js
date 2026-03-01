@@ -5,10 +5,12 @@ const {
   registerUser,
   loginUser,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  verifyOtp        
 } = require("../controllers/authController");
 
 router.post("/register", registerUser);
+router.post("/verify-otp", verifyOtp);
 router.post("/login", loginUser);
 
 // Password reset routes
