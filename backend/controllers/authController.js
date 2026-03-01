@@ -1,10 +1,8 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
-const { Resend } = require("resend"); // ✅ Resend import
-
-const resend = new Resend(process.env.RESEND_API_KEY); // ✅ Resend instance
+const crypto = require("crypto"); // Node built-in
+const { Resend } = require("resend");
 
 // =======================
 // REGISTER USER
@@ -13,12 +11,14 @@ exports.registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
+    // basic validation
     if (!name || !email || !password) {
       return res.status(400).json({
         message: "All fields are required"
       });
     }
 
+    // check existing user
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
       return res.status(400).json({
@@ -26,9 +26,11 @@ exports.registerUser = async (req, res) => {
       });
     }
 
+    // hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    // create user
     await User.create({
       name,
       email,
@@ -72,6 +74,7 @@ exports.loginUser = async (req, res) => {
       });
     }
 
+    // update last login time
     await User.findByIdAndUpdate(user._id, { lastLogin: new Date() });
 
     const token = jwt.sign(
@@ -108,6 +111,8 @@ exports.forgotPassword = async (req, res) => {
 
     const user = await User.findOne({ email: email.toLowerCase() });
 
+    // Security: Always return success — chahe email ho ya na ho
+    // Yeh user enumeration attack se bachata hai
     if (!user) {
       return res.status(200).json({
         message: "If this email is registered, a reset link has been sent."
@@ -117,22 +122,25 @@ exports.forgotPassword = async (req, res) => {
     // Generate random token
     const rawToken = crypto.randomBytes(32).toString("hex");
 
-    // Hash token before saving in DB
+    // Hash token before saving in DB (security best practice)
     const hashedToken = crypto
       .createHash("sha256")
       .update(rawToken)
       .digest("hex");
 
-    // Save hashed token + expiry (30 min)
+    // Save hashed token + expiry (30 min) in DB
     user.resetPasswordToken  = hashedToken;
-    user.resetPasswordExpire = Date.now() + 30 * 60 * 1000;
+    user.resetPasswordExpire = Date.now() + 30 * 60 * 1000; // 30 minutes
     await user.save();
 
+    // Reset link with RAW token (user ke email mein)
     const resetUrl = `${process.env.CLIENT_URL}/reset-password.html?token=${rawToken}`;
 
-    // ✅ Resend se email bhejo (nodemailer hataya)
-    const { error } = await resend.emails.send({
-      from: "onboarding@resend.dev", // ⚠️ Apna domain verify hone ke baad yahan apna email lagana
+    // Resend email
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    await resend.emails.send({
+      from: "UserSphere <noreply@mail.spacego.online>",
       to: user.email,
       subject: "Reset Your Password — UserSphere",
       html: `
@@ -190,8 +198,6 @@ exports.forgotPassword = async (req, res) => {
       `
     });
 
-    if (error) throw error;
-
     res.status(200).json({
       message: "If this email is registered, a reset link has been sent."
     });
@@ -199,6 +205,7 @@ exports.forgotPassword = async (req, res) => {
   } catch (error) {
     console.error("Forgot password error:", error);
 
+    // Agar email sending fail ho toh token DB se clean karo
     if (req.body.email) {
       await User.findOneAndUpdate(
         { email: req.body.email },
@@ -222,14 +229,16 @@ exports.resetPassword = async (req, res) => {
       return res.status(400).json({ message: "Token and password are required" });
     }
 
+    // Hash the incoming raw token to compare with DB
     const hashedToken = crypto
       .createHash("sha256")
       .update(token)
       .digest("hex");
 
+    // Find user with valid (non-expired) token
     const user = await User.findOne({
       resetPasswordToken:  hashedToken,
-      resetPasswordExpire: { $gt: Date.now() }
+      resetPasswordExpire: { $gt: Date.now() } // token abhi expire nahi hua
     });
 
     if (!user) {
@@ -238,15 +247,18 @@ exports.resetPassword = async (req, res) => {
       });
     }
 
+    // Password strength check
     if (password.length < 8) {
       return res.status(400).json({
         message: "Password must be at least 8 characters."
       });
     }
 
+    // Hash new password
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
 
+    // Clear reset token fields
     user.resetPasswordToken  = null;
     user.resetPasswordExpire = null;
 
