@@ -17,7 +17,7 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-app.set('trust proxy', false);
+app.set('trust proxy', 1);
 
 // ✅ health check route (For Uptimerobot)
 app.get("/health", (req, res) => {
