@@ -38,7 +38,11 @@ app.use(express.static(path.join(__dirname, "../public"), {
 }));
 
 // DEFAULT LANDING PAGE ROUTE
+// cl.spacego.online → CodeLens, spacego.online → UserSphere landing
 app.get("/", (req, res) => {
+  if (req.hostname === "cl.spacego.online") {
+    return res.redirect("/codelens/index.html");
+  }
   res.sendFile(path.join(__dirname, "../public/landing.html"));
 });
 
